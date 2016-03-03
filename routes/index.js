@@ -13,7 +13,6 @@ conn.connect();
 router.get('/', function (req, res, next) {
     conn.query('SELECT * FROM `car_parks`', function(err, rows, fields) {
        if (err) throw err;
-       console.log(JSON.stringify(rows));
        
         res.render('index', {
             carParks: rows

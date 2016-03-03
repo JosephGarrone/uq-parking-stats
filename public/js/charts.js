@@ -33,7 +33,7 @@ function drawChart() {
         var start = new Date(date);
         start.setHours(0, 0, 0, 0);
         var end = new Date(date);
-        start.setHours(23, 59, 59, 999);
+        end.setHours(23, 59, 59, 999);
         
         var options = {
             height: 500,
@@ -61,7 +61,7 @@ function drawChart() {
                     max: end
                 },
                 gridlines: {
-                    count: 12
+                    count: 24
                 },
                 minorGridlines: {
                     count: 1

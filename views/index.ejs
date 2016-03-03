@@ -13,8 +13,8 @@
                 <select id="car-park">
                     <option value="" disabled>Select carpark</option>
                     <option value="all">All Carparks</option>
-                    <option value="all">All Casual</option>
-                    <option value="all">All Permits</option>
+                    <option value="casual">All Casual</option>
+                    <option value="permits">All Permits</option>
                     <% for (var i = 0; i < carParks.length; i++) { %>
                         <option value="<%= carParks[i].id %>" <%= i == 0 ? "selected" : "" %>><%= carParks[i].name %></option>
                     <% } %>

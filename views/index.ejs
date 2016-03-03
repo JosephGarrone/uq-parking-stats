@@ -1,0 +1,42 @@
+<%- include shared/head.ejs %>
+
+<div class="container">
+    <div class="section">
+
+        <div class="row">
+            <div class="col s6 m6">
+                <h5>
+                    Parking Stats
+                </h5>
+            </div>
+            <div class="col s6 m6">
+                <!-- Dropdown Trigger -->
+                <a class='dropdown-button btn align-right' href='#' data-activates='carpark-selector'>Select carpark</a>
+                <!-- Dropdown Structure -->
+                <ul id='carpark-selector' class='dropdown-content'>
+                    <li><a href="#!">Conifier Knoll</a></li>
+                    <li><a href="#!">Dustbowl</a></li>
+                </ul>
+                
+                <!-- Dropdown Trigger -->
+                <a class='dropdown-button btn align-right' href='#' data-activates='chart-type-selector'>Select chart type</a>
+                <!-- Dropdown Structure -->
+                <ul id='chart-type-selector' class='dropdown-content'>
+                    <li><a href="#!">Line</a></li>
+                    <li><a href="#!">Bar</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col s12 m12">
+                <div id="line_top_x"></div>
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <br>
+</div>
+
+<%- include shared/foot.ejs %>

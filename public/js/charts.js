@@ -1,35 +1,55 @@
-google.charts.load('current', { 'packages': ['line'] });
+google.charts.load('current', { 'packages': ['line'] })
 google.charts.setOnLoadCallback(drawChart);
 
+$('#car-park').change(drawChart);
+$('#graph-type').change(drawChart);
+
 function drawChart() {
+    var carPark = $('#car-park option:selected').text();
+    var carParkId = $('#car-park').val();
+    
     var data = new google.visualization.DataTable();
-    data.addColumn('number', 'Day');
-    data.addColumn('number', 'Guardians of the Galaxy');
-    data.addColumn('number', 'The Avengers');
-    data.addColumn('number', 'Transformers: Age of Extinction');
+    data.addColumn('datetime', 'Time');
+    data.addColumn('number', carPark);
+    
+    $.ajax('/' + carParkId).done(function(json) {
+        if (json.length == 0) {
+            return;
+        }
+        
+        for (var i = 0; i < json.length; i++) {
+            data.addRow([new Date(new Date(json[i].time).toString()), json[i].available])
+        }
+        
+        var options = {
+            height: 500,
+            hAxis: {
+                viewWindow: {
+                    min: new Date(new Date(json[0].time).toString()),
+                    max: new Date(new Date(json[json.length - 1].time).toString())
+                },
+                gridlines: {
+                    count: -1,
+                    units: {
+                        days: { format: ['MMM dd'] },
+                        hours: { format: ['HH:mm', 'ha'] },
+                    }
+                },
+                minorGridlines: {
+                    units: {
+                        hours: { format: ['hh:mm:ss a', 'ha'] },
+                        minutes: { format: ['HH:mm a Z', ':mm'] }
+                    }
+                }
+            }
+        };
 
-    data.addRows([
-        [1, 37.8, 80.8, 41.8],
-        [2, 30.9, 69.5, 32.4],
-        [3, 25.4, 57, 25.7],
-        [4, 11.7, 18.8, 10.5],
-        [5, 11.9, 17.6, 10.4],
-        [6, 8.8, 13.6, 7.7],
-        [7, 7.6, 12.3, 9.6],
-        [8, 12.3, 29.2, 10.6],
-        [9, 16.9, 42.9, 14.8],
-        [10, 12.8, 30.9, 11.6],
-        [11, 5.3, 7.9, 4.7],
-        [12, 6.6, 8.4, 5.2],
-        [13, 4.8, 6.3, 3.6],
-        [14, 4.2, 6.2, 3.4]
-    ]);
+        var chart = new google.charts.Line(document.getElementById('line_top_x'));
 
-    var options = {
-        height: 500,
-    };
-
-    var chart = new google.charts.Line(document.getElementById('line_top_x'));
-
-    chart.draw(data, options);
+        chart.draw(data, options);
+    }).fail(function() {
+        
+    }).always(function() {
+        
+    })
 }

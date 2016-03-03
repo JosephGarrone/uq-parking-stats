@@ -10,20 +10,18 @@
                 </h5>
             </div>
             <div class="input-field col s6 m6 l3">
-                <select>
-                    <option value="" disabled selected>Select carpark</option>
-                    <option value="1">Conifer Knoll</option>
-                    <option value="2">Dustbowl</option>
-                    <option value="3">Multilevel</option>
+                <select id="car-park">
+                    <option value="" disabled>Select carpark</option>
+                    <% for (var i = 0; i < carParks.length; i++) { %>
+                        <option value="<%= carParks[i].id %>" <%= i == 0 ? "selected" : "" %>><%= carParks[i].name %></option>
+                    <% } %>
                 </select>
             </div>
             
             <div class="input-field col s6 m6 l3">
-                <select>
-                    <option value="" disabled selected>Select graph type</option>
-                    <option value="1">Line</option>
-                    <option value="2">Bar</option>
-                    <option value="3">Column</option>
+                <select id="graph-type">
+                    <option value="" disabled>Select graph type</option>
+                    <option value="1" selected>Line</option>
                 </select>
             </div>
         </div>

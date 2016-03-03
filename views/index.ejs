@@ -4,32 +4,32 @@
     <div class="section">
 
         <div class="row">
-            <div class="col s6 m6">
+            <div class="col s12 m12 l6">
                 <h5>
                     Parking Stats
                 </h5>
             </div>
-            <div class="col s6 m6">
-                <!-- Dropdown Trigger -->
-                <a class='dropdown-button btn align-right' href='#' data-activates='carpark-selector'>Select carpark</a>
-                <!-- Dropdown Structure -->
-                <ul id='carpark-selector' class='dropdown-content'>
-                    <li><a href="#!">Conifier Knoll</a></li>
-                    <li><a href="#!">Dustbowl</a></li>
-                </ul>
-                
-                <!-- Dropdown Trigger -->
-                <a class='dropdown-button btn align-right' href='#' data-activates='chart-type-selector'>Select chart type</a>
-                <!-- Dropdown Structure -->
-                <ul id='chart-type-selector' class='dropdown-content'>
-                    <li><a href="#!">Line</a></li>
-                    <li><a href="#!">Bar</a></li>
-                </ul>
+            <div class="input-field col s6 m6 l3">
+                <select>
+                    <option value="" disabled selected>Select carpark</option>
+                    <option value="1">Conifer Knoll</option>
+                    <option value="2">Dustbowl</option>
+                    <option value="3">Multilevel</option>
+                </select>
+            </div>
+            
+            <div class="input-field col s6 m6 l3">
+                <select>
+                    <option value="" disabled selected>Select graph type</option>
+                    <option value="1">Line</option>
+                    <option value="2">Bar</option>
+                    <option value="3">Column</option>
+                </select>
             </div>
         </div>
         
         <div class="row">
-            <div class="col s12 m12">
+            <div class="col s12 m12 l12">
                 <div id="line_top_x"></div>
             </div>
         </div>

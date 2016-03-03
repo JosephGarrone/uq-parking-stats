@@ -26,10 +26,7 @@ function drawChart() {
     ]);
 
     var options = {
-        chart: {
-            title: 'Parking at ' + $(),
-            subtitle: 'in millions of dollars (USD)'
-        }
+        height: 500,
     };
 
     var chart = new google.charts.Line(document.getElementById('line_top_x'));

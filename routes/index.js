@@ -22,8 +22,8 @@ router.get('/', function (req, res, next) {
 });
 
 /* GET data */
-router.get('/:carpark', function (req, res, next) {
-    conn.query('SELECT * FROM `car_park_info` WHERE `car_park` = ?', [req.params.carpark], function(err, rows, fields) {
+router.get('/:carpark/:date', function (req, res, next) {
+    conn.query('SELECT * FROM `car_park_info` WHERE `car_park` = ? AND DATE(`time`) = STR_TO_DATE(?, "%Y-%m-%d") GROUP BY UNIX_TIMESTAMP(`time`) DIV 300', [req.params.carpark, req.params.date], function(err, rows, fields) {
         res.send(rows);
     });
 })

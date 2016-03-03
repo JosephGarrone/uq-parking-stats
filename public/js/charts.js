@@ -3,16 +3,19 @@ google.charts.setOnLoadCallback(drawChart);
 
 $('#car-park').change(drawChart);
 $('#graph-type').change(drawChart);
+$('#view-date').change(drawChart);
 
 function drawChart() {
     var carPark = $('#car-park option:selected').text();
     var carParkId = $('#car-park').val();
     
+    var date = $('#view-date').pickadate('picker').get('select', 'yyyy-mm-dd');
+    
     var data = new google.visualization.DataTable();
     data.addColumn('datetime', 'Time');
     data.addColumn('number', carPark);
     
-    $.ajax('/' + carParkId).done(function(json) {
+    $.ajax('/' + carParkId + '/' + date).done(function(json) {
         if (json.length == 0) {
             return;
         }
@@ -23,28 +26,19 @@ function drawChart() {
         
         var options = {
             height: 500,
+            width: $("#graph").outerWidth(),
+            legend: {
+                position: 'none'
+            },
+            vAxis: {
+                title: 'Parks'
+            },
             hAxis: {
-                viewWindow: {
-                    min: new Date(new Date(json[0].time).toString()),
-                    max: new Date(new Date(json[json.length - 1].time).toString())
-                },
-                gridlines: {
-                    count: -1,
-                    units: {
-                        days: { format: ['MMM dd'] },
-                        hours: { format: ['HH:mm', 'ha'] },
-                    }
-                },
-                minorGridlines: {
-                    units: {
-                        hours: { format: ['hh:mm:ss a', 'ha'] },
-                        minutes: { format: ['HH:mm a Z', ':mm'] }
-                    }
-                }
+                title: 'Time'
             }
         };
 
-        var chart = new google.charts.Line(document.getElementById('line_top_x'));
+        var chart = new google.charts.Line(document.getElementById('graph'));
 
         chart.draw(data, options);
     }).fail(function() {

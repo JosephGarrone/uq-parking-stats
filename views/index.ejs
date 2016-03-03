@@ -9,7 +9,7 @@
                     Parking Stats
                 </h5>
             </div>
-            <div class="input-field col s6 m6 l3">
+            <div class="input-field col s6 m4 l2">
                 <select id="car-park">
                     <option value="" disabled>Select carpark</option>
                     <% for (var i = 0; i < carParks.length; i++) { %>
@@ -18,7 +18,11 @@
                 </select>
             </div>
             
-            <div class="input-field col s6 m6 l3">
+            <div class="input-field col s12 m4 l2">
+                <input id="view-date" type="date" class="datepicker" placeholder="Pick a date">
+            </div>
+            
+            <div class="input-field col s6 m4 l2">
                 <select id="graph-type">
                     <option value="" disabled>Select graph type</option>
                     <option value="1" selected>Line</option>
@@ -28,7 +32,7 @@
         
         <div class="row">
             <div class="col s12 m12 l12">
-                <div id="line_top_x"></div>
+                <div id="graph"></div>
             </div>
         </div>
 

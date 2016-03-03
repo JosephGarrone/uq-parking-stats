@@ -1,9 +1,11 @@
-google.charts.load('current', { 'packages': ['line'] })
+google.charts.load('current', { 'packages': ['corechart'] })
 google.charts.setOnLoadCallback(drawChart);
 
-$('#car-park').change(drawChart);
-$('#graph-type').change(drawChart);
-$('#view-date').change(drawChart);
+$(document).ready(function () {
+    $('#car-park').change(drawChart);
+    $('#graph-type').change(drawChart);
+    $('#view-date').change(drawChart); 
+});
 
 function drawChart() {
     var carPark = $('#car-park option:selected').text();
@@ -21,8 +23,13 @@ function drawChart() {
         }
         
         for (var i = 0; i < json.length; i++) {
-            data.addRow([new Date(new Date(json[i].time).toString()), json[i].available])
+            data.addRow([new Date(json[i].time), json[i].available])
         }
+        
+        var start = new Date(date);
+        start.setHours(0, 0, 0, 0);
+        var end = new Date(date);
+        start.setHours(23, 59, 59, 999);
         
         var options = {
             height: 500,
@@ -31,14 +38,34 @@ function drawChart() {
                 position: 'none'
             },
             vAxis: {
+                titleTextStyle: { 
+                    italic: false
+                },
+                viewWindow: {
+                    min: 0
+                },
                 title: 'Parks'
             },
             hAxis: {
-                title: 'Time'
+                titleTextStyle: { 
+                    italic: false
+                },
+                title: 'Time',
+                format: 'HH:mm',
+                viewWindow: {
+                    min: start,
+                    max: end
+                },
+                gridlines: {
+                    count: 12
+                },
+                minorGridlines: {
+                    count: 1
+                }
             }
         };
 
-        var chart = new google.charts.Line(document.getElementById('graph'));
+        var chart = new google.visualization.LineChart(document.getElementById('graph'));
 
         chart.draw(data, options);
     }).fail(function() {

@@ -38,6 +38,10 @@ function drawChart() {
         var options = {
             height: 500,
             width: $("#graph").outerWidth(),
+            chartArea: {
+                width: '90%',
+                height: '75%'
+            },
             legend: {
                 position: 'none'
             },

@@ -12,6 +12,9 @@
             <div class="input-field col s6 m6 l2">
                 <select id="car-park">
                     <option value="" disabled>Select carpark</option>
+                    <option value="all">All Carparks</option>
+                    <option value="all">All Casual</option>
+                    <option value="all">All Permits</option>
                     <% for (var i = 0; i < carParks.length; i++) { %>
                         <option value="<%= carParks[i].id %>" <%= i == 0 ? "selected" : "" %>><%= carParks[i].name %></option>
                     <% } %>

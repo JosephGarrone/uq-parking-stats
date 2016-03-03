@@ -1,10 +1,9 @@
 google.charts.load('current', { 'packages': ['corechart'] })
-google.charts.setOnLoadCallback(drawChart);
-
-$(document).ready(function () {
+google.charts.setOnLoadCallback(function() {
     $('#car-park').change(drawChart);
     $('#graph-type').change(drawChart);
     $('#view-date').change(drawChart); 
+    drawChart();
 });
 
 function drawChart() {
@@ -19,8 +18,13 @@ function drawChart() {
     
     $.ajax('/' + carParkId + '/' + date).done(function(json) {
         if (json.length == 0) {
+            $("#graph").addClass("hide");
+            $("#no-data").removeClass("hide");
             return;
         }
+        
+        $("#graph").removeClass("hide");
+        $("#no-data").addClass("hide");
         
         for (var i = 0; i < json.length; i++) {
             data.addRow([new Date(json[i].time), json[i].available])
@@ -44,7 +48,7 @@ function drawChart() {
                 viewWindow: {
                     min: 0
                 },
-                title: 'Parks'
+                title: 'Available Parks'
             },
             hAxis: {
                 titleTextStyle: { 
@@ -69,7 +73,8 @@ function drawChart() {
 
         chart.draw(data, options);
     }).fail(function() {
-        
+        $("#graph").addClass("hide");
+        $("#no-data").removeClass("hide");
     }).always(function() {
         
     })

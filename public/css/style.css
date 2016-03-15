@@ -22,3 +22,7 @@ footer {
 footer.page-footer {
     padding-top: 0px;
 }
+
+.text-light {
+    font-weight: 200;
+}

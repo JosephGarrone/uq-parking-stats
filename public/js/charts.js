@@ -36,8 +36,8 @@ function drawChart() {
         var hTitle = "Time";
         var vTitle = "Available Parks";
         var chartArea = {
-            left: 70,
-            right: 70,
+            left: 95,
+            right: 95,
             top: 10,
             bottom: 70,
             width: '80%',

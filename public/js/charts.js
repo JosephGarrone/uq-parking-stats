@@ -3,6 +3,7 @@ google.charts.setOnLoadCallback(function() {
     $('#car-park').change(drawChart);
     $('#graph-type').change(drawChart);
     $('#view-date').change(drawChart); 
+    $('#refresh').click(drawChart);
     drawChart();
 });
 
@@ -16,15 +17,16 @@ function drawChart() {
     data.addColumn('datetime', 'Time');
     data.addColumn('number', carPark);
     
+    $("#loader").removeClass("hide");
+    var width = $("#graph").outerWidth();
+    $("#graph").addClass("hide");
+    
     $.ajax('/' + carParkId + '/' + date).done(function(json) {
         if (json.length == 0) {
             $("#graph").addClass("hide");
             $("#no-data").removeClass("hide");
             return;
         }
-        
-        $("#graph").removeClass("hide");
-        $("#no-data").addClass("hide");
         
         for (var i = 0; i < json.length; i++) {
             data.addRow([new Date(json[i].time), json[i].available])
@@ -34,13 +36,13 @@ function drawChart() {
         start.setHours(0, 0, 0, 0);
         var end = new Date(date);
         end.setHours(23, 59, 59, 999);
-        
+        console.log(width);
         var options = {
-            height: 500,
-            width: $("#graph").outerWidth(),
+            height: 450,
+            width: width,
             chartArea: {
                 width: '75%',
-                height: '75%'
+                height: '80%'
             },
             legend: {
                 position: 'none'
@@ -76,10 +78,13 @@ function drawChart() {
         var chart = new google.visualization.LineChart(document.getElementById('graph'));
 
         chart.draw(data, options);
+        
+        $("#graph").removeClass("hide");
+        $("#no-data").addClass("hide");
     }).fail(function() {
         $("#graph").addClass("hide");
         $("#no-data").removeClass("hide");
     }).always(function() {
-        
+        $("#loader").addClass("hide");
     })
 }

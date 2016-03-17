@@ -26,3 +26,7 @@ footer.page-footer {
 .text-light {
     font-weight: 200;
 }
+
+.no-display {
+    display: none;
+}

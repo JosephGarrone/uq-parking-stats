@@ -19,6 +19,7 @@ function drawChart() {
     
     $("#loader").removeClass("hide");
     var width = $("#graph").outerWidth();
+    var height = 450;
     $("#graph").addClass("hide");
     
     $.ajax('/' + carParkId + '/' + date).done(function(json) {
@@ -32,18 +33,39 @@ function drawChart() {
             data.addRow([new Date(json[i].time), json[i].available])
         }
         
+        var hTitle = "Time";
+        var vTitle = "Available Parks";
+        var chartArea = {
+            left: 70,
+            right: 70,
+            top: 10,
+            bottom: 70,
+            width: '80%',
+            height: '80%'
+        };
+        
+        if (width < height) {
+            hTitle = null;
+            vTitle = null;
+            var chartArea = {
+                left: 35,
+                top: 10,
+                bottom: 35,
+                right: 10,
+                width: '80%',
+                height: '80%'
+            };
+        }
+        
         var start = new Date(date);
         start.setHours(0, 0, 0, 0);
         var end = new Date(date);
         end.setHours(23, 59, 59, 999);
-        console.log(width);
+        
         var options = {
-            height: 450,
+            height: height,
             width: width,
-            chartArea: {
-                width: '75%',
-                height: '80%'
-            },
+            chartArea: chartArea,
             legend: {
                 position: 'none'
             },
@@ -54,13 +76,14 @@ function drawChart() {
                 viewWindow: {
                     min: 0
                 },
-                title: 'Available Parks'
+                title: vTitle,
             },
             hAxis: {
+                slantedText: true,
                 titleTextStyle: { 
                     italic: false
                 },
-                title: 'Time',
+                title: hTitle,
                 format: 'HH:mm',
                 viewWindow: {
                     min: start,

@@ -4,20 +4,20 @@
     <div class="section">
 
         <div class="row">
-            <div class="col s12 m12 l8">
+            <div class="col s12 m12 l7">
                 <h5>
                     Parking Stats
                 </h5>
             </div>
                 
-            <div class="input-field col s6 m6 l2">
+            <div class="input-field col s6 m6 l3">
                 <select id="car-park">
                     <option value="" disabled>Select carpark</option>
                     <option value="all">All Carparks</option>
-                    <option value="casual">All Casual</option>
+                    <option value="casual" selected>All Casual</option>
                     <option value="permits">All Permits</option>
                     <% for (var i = 0; i < carParks.length; i++) { %>
-                        <option value="<%= carParks[i].id %>" <%= i == 0 ? "selected" : "" %>><%= carParks[i].name %></option>
+                        <option value="<%= carParks[i].id %>"><%= carParks[i].name %> (<%= carParks[i].data_name.toUpperCase() %>)</option>
                     <% } %>
                 </select>
             </div>

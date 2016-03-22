@@ -22,7 +22,7 @@ function drawChart() {
     var height = 450;
     $("#graph").addClass("hide");
     
-    $.ajax('/' + carParkId + '/' + date).done(function(json) {
+    $.ajax('/api/' + carParkId + '/' + date).done(function(json) {
         if (json.length == 0) {
             $("#graph").addClass("hide");
             $("#no-data").removeClass("hide");
@@ -36,7 +36,7 @@ function drawChart() {
         var hTitle = "Time";
         var vTitle = "Available Parks";
         var chartArea = {
-            left: 95,
+            left: 100,
             right: 95,
             top: 10,
             bottom: 70,
@@ -48,11 +48,11 @@ function drawChart() {
             hTitle = null;
             vTitle = null;
             var chartArea = {
-                left: 35,
+                left: 45,
                 top: 10,
                 bottom: 35,
                 right: 10,
-                width: '80%',
+                width: '75%',
                 height: '80%'
             };
         }

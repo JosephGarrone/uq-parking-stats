@@ -22,28 +22,28 @@ router.get('/:carpark/:date', function (req, res, next) {
 	var qry, qryParams;
 	if (req.params.carpark == "all") {
 		
-		qry = 'SELECT SUM(a.avg_available) AS available, a.`time`
-			FROM (
-				SELECT ROUND(AVG(available), 0) AS avg_available, FROM_UNIXTIME(((((UNIX_TIMESTAMP(`time`)+30) DIV 60) * 60) DIV 300) * 300) as `time`
-				FROM car_park_info
-				WHERE DATE(CONVERT_TZ(`time`, "+00:00", "+10:00")) = STR_TO_DATE(?, "%Y-%m-%d")
-				GROUP BY car_park, (((TIME_TO_SEC(`time`)+30) DIV 60) * 60) DIV 300
-			) AS a
-			GROUP BY a.`time`';
+		qry =	'SELECT SUM(a.avg_available) AS available, a.`time` ' +
+				'FROM ( ' +
+				'	SELECT ROUND(AVG(available), 0) AS avg_available, FROM_UNIXTIME(((((UNIX_TIMESTAMP(`time`)+30) DIV 60) * 60) DIV 300) * 300) as `time` ' +
+				'	FROM car_park_info ' +
+				'	WHERE DATE(CONVERT_TZ(`time`, "+00:00", "+10:00")) = STR_TO_DATE(?, "%Y-%m-%d") ' +
+				'	GROUP BY car_park, (((TIME_TO_SEC(`time`)+30) DIV 60) * 60) DIV 300 ' +
+				') AS a ' +
+				'GROUP BY a.`time`';
 		qryParams = [req.params.date];
 		
 	} else if (req.params.carpark == "casual" || req.params.carpark == "permit") {
 		
-		qry = 'SELECT SUM(a.avg_available) AS available, a.`time`
-		FROM (
-			SELECT ROUND(AVG(available), 0) AS avg_available, FROM_UNIXTIME(((((UNIX_TIMESTAMP(`time`)+30) DIV 60) * 60) DIV 300) * 300) as `time`
-			FROM car_park_info
-			LEFT JOIN car_parks ON (car_parks.id = car_park_info.car_park)
-			WHERE DATE(CONVERT_TZ(`time`, "+00:00", "+10:00")) = STR_TO_DATE(?, "%Y-%m-%d")
-			AND `car_parks`.`casual` = ?
-			GROUP BY car_park, (((TIME_TO_SEC(`time`)+30) DIV 60) * 60) DIV 300
-		) AS a
-		GROUP BY a.`time`';
+		qry =	'SELECT SUM(a.avg_available) AS available, a.`time` ' +
+				'FROM ( ' +
+				'	SELECT ROUND(AVG(available), 0) AS avg_available, FROM_UNIXTIME(((((UNIX_TIMESTAMP(`time`)+30) DIV 60) * 60) DIV 300) * 300) as `time` ' +
+				'	FROM car_park_info ' +
+				'	LEFT JOIN car_parks ON (car_parks.id = car_park_info.car_park) ' +
+				'	WHERE DATE(CONVERT_TZ(`time`, "+00:00", "+10:00")) = STR_TO_DATE(?, "%Y-%m-%d") ' +
+				'	AND `car_parks`.`casual` = ? ' +
+				'	GROUP BY car_park, (((TIME_TO_SEC(`time`)+30) DIV 60) * 60) DIV 300 ' +
+				') AS a ' +
+				'GROUP BY a.`time`';
 		
 		if (req.params.carpark == "casual") {
 			qryParams = [req.params.date, 1];
@@ -53,11 +53,11 @@ router.get('/:carpark/:date', function (req, res, next) {
 		
 	} else {
 		
-		qry = 'SELECT ROUND(AVG(available), 0) AS available, FROM_UNIXTIME(((((UNIX_TIMESTAMP(`time`)+30) DIV 60) * 60) DIV 300) * 300) as `time`
-			FROM car_park_info
-			WHERE DATE(CONVERT_TZ(`time`, "+00:00", "+10:00")) = STR_TO_DATE(?, "%Y-%m-%d")
-			AND car_park = ?
-			GROUP BY car_park, (((TIME_TO_SEC(`time`)+30) DIV 60) * 60) DIV 300';
+		qry = 'SELECT ROUND(AVG(available), 0) AS available, FROM_UNIXTIME(((((UNIX_TIMESTAMP(`time`)+30) DIV 60) * 60) DIV 300) * 300) as `time` ' +
+			'FROM car_park_info ' +
+			'WHERE DATE(CONVERT_TZ(`time`, "+00:00", "+10:00")) = STR_TO_DATE(?, "%Y-%m-%d") ' +
+			'AND car_park = ? ' +
+			'GROUP BY car_park, (((TIME_TO_SEC(`time`)+30) DIV 60) * 60) DIV 300';
 		
 		qryParams = [req.params.date, req.params.carpark];
 		

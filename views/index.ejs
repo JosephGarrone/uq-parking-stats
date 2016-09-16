@@ -15,7 +15,7 @@
                     <option value="" disabled>Select carpark</option>
                     <option value="all">All Carparks</option>
                     <option value="casual" selected>All Casual</option>
-                    <option value="permits">All Permits</option>
+                    <option value="permit">All Permits</option>
                     <% for (var i = 0; i < carParks.length; i++) { %>
                         <option value="<%= carParks[i].id %>"><%= carParks[i].name %> (<%= carParks[i].data_name.toUpperCase() %>)</option>
                     <% } %>

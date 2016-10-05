@@ -3,7 +3,7 @@ var mysql = require('mysql');
 var router = express.Router();
 var conn = mysql.createPool({
     connectionLimit: 10,
-    host: 'localhost',
+    host: 'mysql',
     user: 'uq_parking',
     password: 'uq_parking',
     database: 'uq_parking',

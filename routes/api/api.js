@@ -28,7 +28,7 @@ router.get('/:carpark/:date', function (req, res, next) {
         
         qry = `SELECT SUM(available) as available, time
                 FROM (
-                    SELECT car_park, available, FROM_UNIXTIME((UNIX_TIMESTAMP(time) DIV 300) * 300) AS time
+                    SELECT car_park, MIN(available) AS available, MIN(FROM_UNIXTIME((UNIX_TIMESTAMP(time) DIV 300) * 300)) AS time
                     FROM car_park_info
                     LEFT JOIN car_parks ON (car_park_info.car_park = car_parks.id)
                     WHERE time >= DATE_SUB(?, INTERVAL 10 HOUR)
@@ -43,7 +43,7 @@ router.get('/:carpark/:date', function (req, res, next) {
         
         qry = `SELECT SUM(available) as available, time
                 FROM (
-                    SELECT car_park, available, FROM_UNIXTIME((UNIX_TIMESTAMP(time) DIV 300) * 300) AS time
+                    SELECT car_park, MIN(available) AS available, MIN(FROM_UNIXTIME((UNIX_TIMESTAMP(time) DIV 300) * 300)) AS time
                     FROM car_park_info
                     LEFT JOIN car_parks ON (car_park_info.car_park = car_parks.id)
                     WHERE time >= DATE_SUB(?, INTERVAL 10 HOUR)
@@ -60,7 +60,7 @@ router.get('/:carpark/:date', function (req, res, next) {
         }
         
     } else {
-        qry = `SELECT available, FROM_UNIXTIME((UNIX_TIMESTAMP(time) DIV 300) * 300) AS time
+        qry = `SELECT MIN(available) as available, MIN(FROM_UNIXTIME((UNIX_TIMESTAMP(time) DIV 300) * 300)) AS time
                 FROM car_park_info
                 WHERE time >= DATE_SUB(?, INTERVAL 10 HOUR)
                     AND time < DATE_ADD(?, INTERVAL 14 HOUR)
@@ -71,8 +71,10 @@ router.get('/:carpark/:date', function (req, res, next) {
     }
     
     // Execute
-    console.log(qryParams);
     conn.query(qry, qryParams, function(err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
         res.send(rows);
     });
 })

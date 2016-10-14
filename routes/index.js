@@ -12,10 +12,8 @@ conn.connect();
 /* GET home page. */
 router.get('/', function (req, res, next) {
     conn.query('SELECT * FROM `car_parks`', function(err, rows, fields) {
-       if (err) throw err;
-       
         res.render('index', {
-            carParks: rows
+            carParks: err ? [] : rows
         });
     });
 });

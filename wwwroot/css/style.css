@@ -1,0 +1,36 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-flow: column;
+}
+
+nav {
+    flex: 0 1 auto;
+}
+
+div.container {
+    flex: 1 1 auto;
+}
+
+footer {
+    flex: 0 1 0px;
+}
+
+footer.page-footer {
+    padding-top: 0px;
+}
+
+.text-light {
+    font-weight: 200;
+}
+
+.no-display {
+    display: none;
+}
+
+.select-dropdown {
+    color: #fff !important;
+}

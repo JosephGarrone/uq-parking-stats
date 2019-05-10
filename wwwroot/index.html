@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+        <title>UQParking</title>
+
+        <!-- CSS  -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    </head>
+    <body class="grey darken-4">
+        <nav class="blue darken-4">
+            <div class="nav-wrapper container">
+                <a href="/" class="brand-logo">UQ<span class="text-light">Parking</span></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/">Home</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="section">
+
+                <div class="row">
+                    <div class="col s12 m12 l7">
+                        <h5 class="white-text">
+                            Parking Stats
+                        </h5>
+                    </div>
+                        
+                    <div class="input-field col s6 m6 l3">
+                        <select id="car-park">
+                            <option value="" disabled>Select carpark</option>
+                            <option value="all">All Carparks</option>
+                            <option value="casual" selected>All Casual</option>
+                            <option value="permit">All Permits</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-field col s6 m6 l2">
+                        <input id="view-date" type="text" class="datepicker no-autoinit white-text" placeholder="Pick a date">
+                    </div>
+                        
+                    <div class="col s12 m12 l12 center-align">
+                        <div id="refresh" class="orange darken-3 waves-effect waves-dark btn"><i class="material-icons left">loop</i><span>Refresh</span></div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col s12 m12 l12">
+                        <div class="center-align" id="loader">
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="graph"></div>
+                        
+                        <h5 id="no-data" class="blue-text lighten-2 center-align hide">No data available</h5>
+                    </div>
+                </div>
+                
+                <div class="row white-text">
+                    <div class="col s12 m12 l12">
+                        This data is fetched from <b><a class="text-blue" href="https://www.pf.uq.edu.au/parking/availability/index.html">this UQ website</a></b>. This data does not include parks around the ring road or any other non-monitored carparks. Whilst all attempts are made to ensure the accuracy of this data, it may not always be 100% correct.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="page-footer blue darken-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12 m12">
+                        <h5 class="white-text">About Me</h5>
+                        <p class="grey-text text-lighten-4">
+                            Just an engineer with too much free time.
+                        </p>
+                    </div>
+                    <div class="col l6 s12 m12 hide-on-large-only">
+                        <h5 class="white-text">Contact Me</h5>
+                        <p class="grey-text text-lighten-4">
+                            <a class="grey-text text-lighten-4" href="mailto:josephgarrone+uqparking@gmail.com">josephgarrone+uqparking@gmail.com</a>
+                        </p>
+                    </div>
+                    <div class="col l6 s12 m12 hide-on-med-and-down">
+                        <h5 class="white-text right-align">Contact Me</h5>
+                        <p class="grey-text text-lighten-4 right-align">
+                            <a class="grey-text text-lighten-4" href="mailto:josephgarrone+uqparking@gmail.com">josephgarrone+uqparking@gmail.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col l6 m6 s6">
+                            Theme by <a class="white-text darken-4" href="http://materializecss.com">Materialize</a>
+                        </div>
+                        
+                        <div class="col l6 m6 s6">
+                            <span class="right">An <a class="white-text darken-4" href="http://www.illogicalbit.com">IllogicalBit</a> site</span>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!--  Scripts-->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <!-- My scripts -->
+        <script src="js/main.js"></script>
+
+        <!-- Tracking -->
+        <script>
+        (function() {
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-67473369-3', 'auto');
+            ga('send', 'pageview');
+
+        })()    
+        </script>
+    </body>
+</html>

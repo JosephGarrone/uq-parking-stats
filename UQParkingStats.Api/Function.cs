@@ -50,6 +50,28 @@ namespace UQParkingStats.Api
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public APIGatewayProxyResponse Result(HttpStatusCode code, object data)
+        {
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = (int)code,
+                Body = JsonConvert.SerializeObject(data),
+                Headers = new Dictionary<string, string>
+                {
+                    { "Content-Type", "application/json" },
+                    { "Access-Control-Allow-Origin", "*" },
+                    { "Access-Control-Allow-Headers", "Content-Type" },
+                    { "Access-Control-Allow-Methods", "OPTIONS,POST,GET" },
+                }
+            };
+        }
+
+        /// <summary>
         /// Scrapes the data and stores it
         /// </summary>
         /// <param name="request"></param>
@@ -102,9 +124,11 @@ namespace UQParkingStats.Api
                         carpark.Data = new List<AvailabilityData>();
                     }
 
+                    bool converted = int.TryParse(carparkData.CurrentDisplay, out int avail);
+
                     carpark.Data.Add(new AvailabilityData
                     {
-                        AvailableParks = (int) carparkData.CurrentDisplay,
+                        AvailableParks = converted ? avail : 0,
                         Timestamp = $"{now:s}"
                     });
 
@@ -112,29 +136,21 @@ namespace UQParkingStats.Api
 
                 await DbContext.SaveAsync(data);
 
-                return new APIGatewayProxyResponse
+                return Result(HttpStatusCode.OK, new Message
                 {
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonConvert.SerializeObject(new Message
-                    {
-                        Content = "FetchData request succeeded.",
-                        Success = true
-                    }),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                };
+                    Content = "FetchData request succeeded.",
+                    Success = true
+                });
             }
             catch (Exception ex)
             {
-                return new APIGatewayProxyResponse
+                context.Logger.LogLine($"Fetch Data. Ex={ex}\n");
+
+                return Result(HttpStatusCode.NotFound, new Message
                 {
-                    StatusCode = (int)HttpStatusCode.NotFound,
-                    Body = JsonConvert.SerializeObject(new Message
-                    {
-                        Content = $"FetchData request failed internally. Ex={ex}",
-                        Success = false
-                    }),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                };
+                    Content = $"FetchData request failed internally. Ex={ex}",
+                    Success = false
+                });
             }
         }
 
@@ -147,32 +163,24 @@ namespace UQParkingStats.Api
         public APIGatewayProxyResponse GetCarparks(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Get Carparks\n");
-            
-            var response = new APIGatewayProxyResponse
+
+            return Result(HttpStatusCode.OK, new[]
             {
-                StatusCode = (int)HttpStatusCode.OK,
-                Body = JsonConvert.SerializeObject(new []
-                {
-                    new { Id = "P1", Name = "Warehouse" },
-                    new { Id = "P2", Name = "Multi Level" },
-                    new { Id = "P3", Name = "Multi Level B" },
-                    new { Id = "P4", Name = "Multi Level A" },
-                    new { Id = "P6", Name = "BSL Short Term" },
-                    new { Id = "P7", Name = "Dustbowl" },
-                    new { Id = "P8 L1", Name = "Boatshep Top" },
-                    new { Id = "P8 L2", Name = "Boatshed Bottom" },
-                    new { Id = "P9", Name = "Boatshed Open" },
-                    new { Id = "P10", Name = "UQ Centre" },
-                    new { Id = "P11 L1", Name = "Conifer L1" },
-                    new { Id = "P11 L2", Name = "Conifer L2" },
-                    new { Id = "P11 L3", Name = "Conifer L3" },
-                    new { Id = "P12", Name = "Daycare" },
-
-                }),
-                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-            };
-
-            return response;
+                new { Id = "P1", Name = "Warehouse" },
+                new { Id = "P2", Name = "Multi Level" },
+                new { Id = "P3", Name = "Multi Level B" },
+                new { Id = "P4", Name = "Multi Level A" },
+                new { Id = "P6", Name = "BSL Short Term" },
+                new { Id = "P7", Name = "Dustbowl" },
+                new { Id = "P8 L1", Name = "Boatshep Top" },
+                new { Id = "P8 L2", Name = "Boatshed Bottom" },
+                new { Id = "P9", Name = "Boatshed Open" },
+                new { Id = "P10", Name = "UQ Centre" },
+                new { Id = "P11 L1", Name = "Conifer L1" },
+                new { Id = "P11 L2", Name = "Conifer L2" },
+                new { Id = "P11 L3", Name = "Conifer L3" },
+                new { Id = "P12", Name = "Daycare" }
+            }); 
         }
 
         /// <summary>
@@ -196,16 +204,11 @@ namespace UQParkingStats.Api
                     {
                         context.Logger.LogLine($"GetData request did not specify a {parameter}.'\n");
 
-                        return new APIGatewayProxyResponse
+                        return Result(HttpStatusCode.OK, new Message
                         {
-                            StatusCode = (int)HttpStatusCode.NotFound,
-                            Body = JsonConvert.SerializeObject(new Message
-                            {
-                                Content = $"GetData request did not specify a {parameter}.",
-                                Success = false
-                            }),
-                            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                        };
+                            Content = $"GetData request did not specify a {parameter}.",
+                            Success = false
+                        });
                     }
                 }
 
@@ -219,112 +222,86 @@ namespace UQParkingStats.Api
                 switch (carpark.ToLower())
                 {
                     case "all":
-                        return new APIGatewayProxyResponse
-                        {
-                            StatusCode = (int)HttpStatusCode.OK,
-                            Body = JsonConvert.SerializeObject(data.Carparks
-                                .GroupBy(park => 0)
-                                .Select(group =>
+                        return Result(HttpStatusCode.OK, data.Carparks
+                            .GroupBy(park => 0)
+                            .Select(group =>
+                            {
+                                return new CarparkData
                                 {
-                                    return new CarparkData
-                                    {
-                                        Name = "All",
-                                        Data = group
-                                            .SelectMany(avail => avail.Data)
-                                            .GroupBy(avail => avail.Timestamp)
-                                            .Select(avail =>
+                                    Name = "All",
+                                    Data = group
+                                        .SelectMany(avail => avail.Data)
+                                        .GroupBy(avail => avail.Timestamp)
+                                        .Select(avail =>
+                                        {
+                                            return new AvailabilityData
                                             {
-                                                return new AvailabilityData
-                                                {
-                                                    Timestamp = avail.Key,
-                                                    AvailableParks = avail.Sum(parks => parks.AvailableParks)
-                                                };
-                                            })
-                                            .ToList()
-                                    };  
-                                })
-                            ),
-                            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                        };
+                                                Timestamp = avail.Key,
+                                                AvailableParks = avail.Sum(parks => parks.AvailableParks)
+                                            };
+                                        })
+                                        .ToList()
+                                };
+                            }));
                     case "casual":
-                        return new APIGatewayProxyResponse
-                        {
-                            StatusCode = (int)HttpStatusCode.OK,
-                            Body = JsonConvert.SerializeObject(data.Carparks
-                                .Where(park => park.IsCasual)
-                                .GroupBy(park => 0)
-                                .Select(group =>
+                        return Result(HttpStatusCode.OK, data.Carparks
+                            .Where(park => park.IsCasual)
+                            .GroupBy(park => 0)
+                            .Select(group =>
+                            {
+                                return new CarparkData
                                 {
-                                    return new CarparkData
-                                    {
-                                        Name = "All",
-                                        Data = group
-                                            .SelectMany(avail => avail.Data)
-                                            .GroupBy(avail => avail.Timestamp)
-                                            .Select(avail =>
+                                    Name = "Casual",
+                                    Data = group
+                                        .SelectMany(avail => avail.Data)
+                                        .GroupBy(avail => avail.Timestamp)
+                                        .Select(avail =>
+                                        {
+                                            return new AvailabilityData
                                             {
-                                                return new AvailabilityData
-                                                {
-                                                    Timestamp = avail.Key,
-                                                    AvailableParks = avail.Sum(parks => parks.AvailableParks)
-                                                };
-                                            })
-                                            .ToList()
-                                    };
-                                })
-                            ),
-                            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                        };
+                                                Timestamp = avail.Key,
+                                                AvailableParks = avail.Sum(parks => parks.AvailableParks)
+                                            };
+                                        })
+                                        .ToList()
+                                };
+                            }));
                     case "permit":
-                        return new APIGatewayProxyResponse
-                        {
-                            StatusCode = (int)HttpStatusCode.OK,
-                            Body = JsonConvert.SerializeObject(data.Carparks
-                                .Where(park => !park.IsCasual)
-                                .GroupBy(park => 0)
-                                .Select(group =>
+                        return Result(HttpStatusCode.OK, data.Carparks
+                            .Where(park => !park.IsCasual)
+                            .GroupBy(park => 0)
+                            .Select(group =>
+                            {
+                                return new CarparkData
                                 {
-                                    return new CarparkData
-                                    {
-                                        Name = "All",
-                                        Data = group
-                                            .SelectMany(avail => avail.Data)
-                                            .GroupBy(avail => avail.Timestamp)
-                                            .Select(avail =>
+                                    Name = "Permit",
+                                    Data = group
+                                        .SelectMany(avail => avail.Data)
+                                        .GroupBy(avail => avail.Timestamp)
+                                        .Select(avail =>
+                                        {
+                                            return new AvailabilityData
                                             {
-                                                return new AvailabilityData
-                                                {
-                                                    Timestamp = avail.Key,
-                                                    AvailableParks = avail.Sum(parks => parks.AvailableParks)
-                                                };
-                                            })
-                                            .ToList()
-                                    };
-                                })
-                            ),
-                            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                        };
+                                                Timestamp = avail.Key,
+                                                AvailableParks = avail.Sum(parks => parks.AvailableParks)
+                                            };
+                                        })
+                                        .ToList()
+                                };
+                            }));
                     default:
-                        return new APIGatewayProxyResponse
-                        {
-                            StatusCode = (int)HttpStatusCode.NotFound,
-                            Body = JsonConvert.SerializeObject(data.Carparks.FirstOrDefault(park => park.Name == carpark)),
-                            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                        };
+                        return Result(HttpStatusCode.OK, data.Carparks.FirstOrDefault(park => park.Name == carpark));
                 }
             }
             catch (Exception ex)
             {
-                return new APIGatewayProxyResponse
+                context.Logger.LogLine($"Get Data. Ex={ex}\n");
+                return Result(HttpStatusCode.NotFound, new Message
                 {
-                    StatusCode = (int)HttpStatusCode.NotFound,
-                    Body = JsonConvert.SerializeObject(new Message
-                    {
-                        Content = $"GetData request ({string.Join(", ", request.PathParameters.Select(param => $"{param.Key}: {param.Value}"))}) failed internally. Ex={ex}",
-                        Success = false
-                    }),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                };
+                    Content =
+                        $"Get Data request ({string.Join(", ", request.PathParameters.Select(param => $"{param.Key}: {param.Value}"))}) failed internally. Ex={ex}",
+                    Success = false
+                });
             }
         }
     }

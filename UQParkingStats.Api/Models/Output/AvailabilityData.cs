@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace UQParkingStats.Api.Models.Output
 {

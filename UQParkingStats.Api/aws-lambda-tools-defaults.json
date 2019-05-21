@@ -12,7 +12,7 @@
     "framework"     : "netcoreapp2.1",
     "s3-prefix"     : "UQParkingStats.Api/",
     "template"      : "serverless.template",
-    "template-parameters" : "\"ShouldCreateTable\"=\"true\";\"ParkingDataTableName\"=\"uq-parking-data\";\"ReadCapacity\"=\"1\";\"WriteCapacity\"=\"1\"",
+    "template-parameters" : "\"ShouldCreateTable\"=\"true\";\"ParkingDataTableName\"=\"uq-parking-data\";\"ReadCapacity\"=\"5\";\"WriteCapacity\"=\"5\"",
     "s3-bucket"           : "uq-parking",
     "stack-name"          : "uq-parking"
 }

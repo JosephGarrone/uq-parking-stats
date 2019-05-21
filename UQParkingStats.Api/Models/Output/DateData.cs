@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Amazon.DynamoDBv2.DataModel;
+using Newtonsoft.Json;
 
 namespace UQParkingStats.Api.Models.Output
 {

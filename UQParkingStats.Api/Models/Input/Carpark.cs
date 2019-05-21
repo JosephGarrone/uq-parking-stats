@@ -32,7 +32,6 @@ namespace UQParkingStats.Api.Models.Input
         public long Id { get; set; }
 
         [JsonProperty("CurrentDisplay")]
-        [JsonConverter(typeof(ParseStringConverter))]
-        public long CurrentDisplay { get; set; }
+        public string CurrentDisplay { get; set; }
     }
 }

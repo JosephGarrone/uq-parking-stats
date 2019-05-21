@@ -25,9 +25,16 @@
 			"Default" : "3",
 			"MinValue" : 1
 		}
-	},
+	}, 
 	"Conditions" : {
 		"CreateParkingDataTable" : {"Fn::Equals" : [{"Ref" : "ShouldCreateTable"}, "true"]},"ParkingDataTableNameGenerated" : {"Fn::Equals" : [{"Ref" : "ParkingDataTableName"}, ""]}
+	},
+	"Globals": {
+		"Api": {
+			"Cors": {
+				"AllowOrigin": "*"
+			}
+		}
 	},
 	"Resources" : {
 		"FetchData" : {
@@ -36,8 +43,8 @@
 				"Handler": "UQParkingStats.Api::UQParkingStats.Api.Functions::FetchData",
 				"Runtime": "dotnetcore2.1",
 				"CodeUri": "",
-				"MemorySize": 256,
-				"Timeout": 30,
+				"MemorySize": 192,
+				"Timeout": 10,
 				"Role": null,
 				"Policies": [ "AWSLambdaFullAccess" ],
 				"Environment" : {
@@ -62,8 +69,8 @@
 				"Handler": "UQParkingStats.Api::UQParkingStats.Api.Functions::GetCarparks",
 				"Runtime": "dotnetcore2.1",
 				"CodeUri": "",
-				"MemorySize": 256,
-				"Timeout": 30,
+				"MemorySize": 192,
+				"Timeout": 15,
 				"Role": null,
 				"Policies": [ "AWSLambdaFullAccess" ],
 				"Environment" : {
@@ -88,7 +95,7 @@
 				"Handler": "UQParkingStats.Api::UQParkingStats.Api.Functions::GetData",
 				"Runtime": "dotnetcore2.1",
 				"CodeUri": "",
-				"MemorySize": 256,
+				"MemorySize": 128,
 				"Timeout": 30,
 				"Role": null,
 				"Policies": [ "AWSLambdaFullAccess" ],
@@ -133,6 +140,6 @@
 		},
 		"ParkingDataTable" : {
 			"Value" : { "Fn::If" : ["CreateParkingDataTable", {"Ref":"ParkingDataTable"}, { "Ref" : "ParkingDataTableName" } ] }
-		},
+		}
 	}
 }
